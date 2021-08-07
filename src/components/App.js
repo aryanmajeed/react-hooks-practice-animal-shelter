@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import Filters from "./Filters";
 import PetBrowser from "./PetBrowser";
@@ -6,6 +6,14 @@ import PetBrowser from "./PetBrowser";
 function App() {
   const [pets, setPets] = useState([]);
   const [filters, setFilters] = useState({ type: "all" });
+
+  useEffect(() => {
+    fetch(`http://localhost:3001/${filters.type}`)
+      .then((r) => r.json())
+      .then((data) => {
+        console.log(data[0]);
+      });
+  }, []);
 
   return (
     <div className="ui container">
