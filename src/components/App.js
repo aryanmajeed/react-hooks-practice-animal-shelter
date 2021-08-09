@@ -5,20 +5,30 @@ import PetBrowser from "./PetBrowser";
 
 function App() {
   const [pets, setPets] = useState([]);
-  const [filters, setFilters] = useState({ type: "all" });
+  const [filters, setFilters] = useState({ type: "pets" });
+
+
 
   useEffect(() => {
-    fetch(`http://localhost:3001/all`)
+    fetch(`http://localhost:3001/pets`)
       .then((r) => r.json())
       .then((data) => {
         console.log(data)
-        // let update = data.filters((type) => type !== filters.type)
-        // setPets(update)
+        let update = data.filter((pet) => {
+          if (filters.type === 'all')
+            return true
+          return pet.type === filters.type
+        })
+        setPets(update)
       });
   }, [filters]);
 
-  function adopt() {
-
+  function adopt(id) {
+    setPets(prev => prev.map((pet) => {
+      if (pet.id === id)
+        return { ...pet, isAdopted: !pet.isAdopted }
+      return pet
+    }))
   }
 
   return (
@@ -29,10 +39,10 @@ function App() {
       <div className="ui container">
         <div className="ui grid">
           <div className="four wide column">
-            <Filters onChangeType={setFilters} onFindPetsClick={adopt} />
+            <Filters onChangeType={setFilters} handleAdopted={adopt} />
           </div>
           <div className="twelve wide column">
-            <PetBrowser pets={pets} />
+            <PetBrowser handleAdopted={adopt} pets={pets} />
           </div>
         </div>
       </div>
