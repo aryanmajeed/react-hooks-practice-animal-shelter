@@ -8,12 +8,18 @@ function App() {
   const [filters, setFilters] = useState({ type: "all" });
 
   useEffect(() => {
-    fetch(`http://localhost:3001/${filters.type}`)
+    fetch(`http://localhost:3001/all`)
       .then((r) => r.json())
       .then((data) => {
-        console.log(data[0]);
+        console.log(data)
+        // let update = data.filters((type) => type !== filters.type)
+        // setPets(update)
       });
-  }, []);
+  }, [filters]);
+
+  function adopt() {
+
+  }
 
   return (
     <div className="ui container">
@@ -23,10 +29,10 @@ function App() {
       <div className="ui container">
         <div className="ui grid">
           <div className="four wide column">
-            <Filters />
+            <Filters onChangeType={setFilters} onFindPetsClick={adopt} />
           </div>
           <div className="twelve wide column">
-            <PetBrowser />
+            <PetBrowser pets={pets} />
           </div>
         </div>
       </div>
